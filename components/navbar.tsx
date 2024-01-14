@@ -20,13 +20,29 @@ export default function Navbar() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/upload" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+        <div className="flex">
+          <NavigationMenuItem>
+            <Link href="/upload" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Upload
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/login" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Log in
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/signup" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Sign up
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </div>
       </NavigationMenuList>
     </NavigationMenu>
   );
