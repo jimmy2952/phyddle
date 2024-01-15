@@ -10,8 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
-  id              Int       @id @default(autoincrement())
+  id              String    @id @default(cuid())
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   username        String    @unique @db.VarChar(30)
@@ -19,16 +45,27 @@ model User {
   bio             String?
   gender          Gender?
   birthday        DateTime? @db.Date
-  avatarUrl       String?   @db.VarChar(2048)
-  email           String    @unique @db.VarChar(40)
+  email           String    @unique
+  emailVerified   DateTime?
+  image           String?   @db.VarChar(2048)
   password        String    @db.VarChar(40)
   status          Status    @default(ACTIVE)
   role            Role?     @default(USER)
   socialMediaInfo Json?
   locale          String?   @db.VarChar(30)
+  accounts        Account[]
+  sessions        Session[]
   photos          Photo[]
   likes           Like[]
   comments        Comment[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Photo {
@@ -45,7 +82,7 @@ model Photo {
   shotAt                     DateTime?
   isNsfw                     Boolean                  @default(false)
   user                       User                     @relation(fields: [userId], references: [id])
-  userId                     Int                      @unique
+  userId                     String                   @unique
   country                    Country                  @relation(fields: [countryId], references: [id])
   countryId                  Int                      @unique
   administrativeDivision     AdministrativeDivision   @relation(fields: [administrativeDivisionId], references: [id])
@@ -85,7 +122,7 @@ model Like {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
+  userId    String   @unique
   photo     Photo    @relation(fields: [photoId], references: [id])
   photoId   Int      @unique
 }
@@ -94,7 +131,7 @@ model Comment {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
+  userId    String   @unique
   photo     Photo    @relation(fields: [photoId], references: [id])
   photoId   Int      @unique
 }
