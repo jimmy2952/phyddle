@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
 import {
   Form,
   FormControl,
@@ -12,6 +13,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { signup } from "@/helpers/request"
+import { SignUpRequest } from "@/types/signup"
 import * as z from "zod"
 
 const formSchema = z.object({
@@ -22,6 +25,10 @@ const formSchema = z.object({
 }).required()
 
 export default function Signup() {
+  const { mutate } = useMutation({
+    mutationFn: (data: SignUpRequest) => signup(data)
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,10 +38,17 @@ export default function Signup() {
       confirmPassword: ""
     },
   })
-  function onSubmit(values: z.infer<typeof formSchema>) {
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    const { username, email, password } = values
+    mutate({
+      username,
+      email,
+      password
+    })
   }
 
   return (
@@ -61,7 +75,7 @@ export default function Signup() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="email" {...field} />
+                  <Input type="email" placeholder="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,7 +88,7 @@ export default function Signup() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="password" {...field} />
+                  <Input type="password" placeholder="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,7 +101,7 @@ export default function Signup() {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="confirm password" {...field} />
+                  <Input type="password" placeholder="confirm password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
