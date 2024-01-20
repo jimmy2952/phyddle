@@ -48,7 +48,7 @@ model User {
   email           String    @unique
   emailVerified   DateTime?
   image           String?   @db.VarChar(2048)
-  password        String    @db.VarChar(40)
+  password        String    @db.VarChar(200)
   status          Status    @default(ACTIVE)
   role            Role?     @default(USER)
   socialMediaInfo Json?
