@@ -20,8 +20,7 @@ import * as z from "zod"
 const formSchema = z.object({
   username: z.string().min(2).max(30),
   email: z.string().email(),
-  password: z.string().min(6).max(30),
-  confirmPassword: z.string().min(6).max(30)
+  password: z.string().min(6).max(30)
 }).required()
 
 export default function Signup() {
@@ -34,8 +33,7 @@ export default function Signup() {
     defaultValues: {
       username: "",
       email: "",
-      password: "",
-      confirmPassword: ""
+      password: ""
     },
   })
 
@@ -89,19 +87,6 @@ export default function Signup() {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="confirm password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
