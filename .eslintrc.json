@@ -5,8 +5,9 @@
     "eslint:recommended"
   ],
   "rules": {
-    "semi": ["error", "always"],
+    "semi": ["error", "never"],
     "quotes": ["error", "double"],
-    "indent": ["error", 2]
+    "indent": ["error", 2],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   }
 }
